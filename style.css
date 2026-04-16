@@ -40,3 +40,8 @@ a{text-decoration:none}
 .feedback-btn{display:inline-flex;align-items:center;justify-content:center;padding:.8rem 1.1rem;border-radius:10px;background:var(--primary);color:#fff;font-weight:700;white-space:nowrap}
 .feedback-btn:hover{background:var(--primary-dark)}
 @media (max-width:768px){.top-nav{display:none}.page-title{font-size:1.6rem}.section{padding:2.4rem 0}}
+
+
+.feedback-inline{display:inline-flex;align-items:center;justify-content:center;padding:.8rem 1.1rem;border-radius:10px;background:#fff;color:var(--primary-dark);font-weight:700;border:1.5px solid #d9c7ee;cursor:pointer}
+.feedback-inline:hover{background:#f4edfb}
+.feedback-strip{margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
