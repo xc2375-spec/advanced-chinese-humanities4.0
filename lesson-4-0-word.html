@@ -933,7 +933,7 @@
 
         <div class="tools-layout">
           <div class="card tool-card">
-            <h3>Ask AI about this lesson</h3>
+            <h3>Study Helper</h3>
             <p>
               You can ask about vocabulary, women-related semantic fields,
               radicals, or the difference between similar abstract words.
@@ -966,7 +966,7 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
               <span class="tag" id="currentTaskTag">Task: student question</span>
             </div>
 
-            <div id="resultBox" class="result-box">Ask a question to get started.</div>
+            <div id="resultBox" class="result-box">Ask a question to get a study hint. This GitHub version runs without a backend.</div>
 
             <div class="tool-actions" style="margin-top: 1rem;">
               <button class="tool-btn secondary" id="clearResultBtn">Clear</button>
@@ -1381,6 +1381,20 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
     </div>
   </div>
 
+
+<section class="section feedback-section">
+  <div class="container">
+    <div class="feedback-card">
+      <div>
+        <p class="feedback-label">Student feedback</p>
+        <h3>Tell us what helped and what should be improved</h3>
+        <p>Use the Google Form to tell the teacher which parts supported your learning most and what still needs to be added.</p>
+      </div>
+      <a class="feedback-btn" href="YOUR_GOOGLE_FORM_URL" target="_blank" rel="noopener noreferrer">Open Feedback Form</a>
+    </div>
+  </div>
+</section>
+
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>Advanced Chinese for Humanities AI</p>
@@ -1391,7 +1405,7 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
   <script src="app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
   <script>
-    const WORKER_URL = "https://quiet-field-a529.xc2375.workers.dev";
+    const GOOGLE_FORM_URL = "YOUR_GOOGLE_FORM_URL";
 
     const resultBox = document.getElementById("resultBox");
     const studentQuestionInput = document.getElementById("studentQuestionInput");
@@ -1449,42 +1463,30 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
       feedbackBox.textContent = "";
     }
 
-    async function askStudentWordHelp(questionText) {
-      try {
-        setLoading();
+    function askStudentWordHelp(questionText) {
+      const canned = [
+        "Try locating the keyword in the vocabulary list first, then compare it with the pattern cards above.",
+        "For this static GitHub version, the AI box is now an offline study helper instead of a live AI call.",
+        "Use these steps:
+1. Find the word in the Concept Net.
+2. Check whether it belongs to a radical family or a meaning field.
+3. Compare it with the Usage Guide if it looks similar to another word.
+4. Write one sentence of your own.",
+        `Your question: ${questionText}`,
+        "If you still have a question, click the Google Form and tell the teacher what explanation you want added."
+      ];
+      setResult(canned.join("
 
-        const response = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            course: "humanities2",
-            lesson: "4-0",
-            task: "student_word_help",
-            question: questionText,
-            context: "Lesson 4.0 discusses the social status of Chinese women, historical oppression, family roles, gender, rights, equality, and modern challenges, with pattern learning around 女字旁, women-related semantic fields, 米字旁, and 木字旁 through 权."
-          })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Request failed.");
-        }
-
-        const resultText = data.result || "No response returned.";
-        setResult(resultText);
-      } catch (error) {
-        setError(error.message || "Something went wrong.");
-      }
+"));
     }
 
-    askAiBtn.addEventListener("click", async () => {
+    askAiBtn.addEventListener("click", () => {
       const question = studentQuestionInput.value.trim();
       if (!question) {
         setError("Please enter a question first.");
         return;
       }
-      await askStudentWordHelp(question);
+      askStudentWordHelp(question);
     });
 
     fillExampleBtn.addEventListener("click", () => {
@@ -1492,7 +1494,7 @@ Why is 权 a good anchor for 夫权, 权益, and 权利?"></textarea>
     });
 
     clearResultBtn.addEventListener("click", () => {
-      resultBox.textContent = "Ask a question to get started.";
+      resultBox.textContent = "Ask a question to get a study hint. This GitHub version runs without a backend.";
     });
 
     const chipWraps = document.querySelectorAll(".concept-chip-wrap");
