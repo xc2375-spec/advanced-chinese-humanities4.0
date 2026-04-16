@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 4.0 — 中国女性的社会地位 · ACH AI</title>
+  <meta name="description" content="AI-assisted learning platform for Advanced Chinese for Humanities — Lesson 4.0: 中国女性的社会地位. Word Explorer, Smart Reading, and Interactive Exercises." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8f5fd; color: #1a1a1a; line-height: 1.7; }
+    a { text-decoration: none; color: inherit; }
+
+    .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Header ── */
+    .site-header {
+      background: #fff; border-bottom: 1px solid #e4d8f5;
+      position: sticky; top: 0; z-index: 100; padding: 0.85rem 0;
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 0.85rem; }
+    .brand-badge {
+      background: linear-gradient(135deg, #4a2a6a, #6b4c8a);
+      color: #fff; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.06em; padding: 0.35rem 0.75rem; border-radius: 6px;
+    }
+    .site-title { font-size: 1rem; font-weight: 700; color: #111; }
+    .site-subtitle { font-size: 0.8rem; color: #999; }
+    .top-nav { display: flex; gap: 1.4rem; }
+    .top-nav a { font-size: 0.87rem; color: #666; font-weight: 500; transition: color 0.2s; }
+    .top-nav a:hover { color: #4a2a6a; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #2e1246 0%, #4a2a6a 55%, #6b3a8a 100%);
+      color: #fff; padding: 3.5rem 0 3rem;
+    }
+    .hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 2.5rem; align-items: center; }
+    .eyebrow { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; }
+    .hero-text h2 { font-size: 1.9rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.9rem; }
+    .hero-text h2 em { font-style: normal; opacity: 0.75; font-size: 0.85em; display: block; margin-top: 0.2rem; }
+    .hero-desc { opacity: 0.88; font-size: 0.97rem; max-width: 500px; margin-bottom: 1.6rem; }
+    .hero-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 0.6rem 1.35rem; border-radius: 7px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+    .btn-white { background: #fff; color: #4a2a6a; }
+    .btn-white:hover { background: #f0e8ff; }
+    .btn-ghost { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.24); }
+
+    .hero-card {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px; padding: 1.5rem 1.8rem; min-width: 210px;
+    }
+    .hero-card h3 { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.65; margin-bottom: 0.9rem; }
+    .hero-stat { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.88rem; }
+    .hero-stat:last-child { border-bottom: none; }
+    .hero-stat strong { font-size: 1.05rem; }
+
+    /* ── Sections ── */
+    .section { padding: 3.5rem 0; }
+    .section.bg-white { background: #fff; }
+    .section-heading { text-align: center; margin-bottom: 2.2rem; }
+    .section-heading h2 { font-size: 1.55rem; font-weight: 700; margin-top: 0.3rem; color: #1a1a1a; }
+    .section-heading p { color: #888; font-size: 0.9rem; margin-top: 0.4rem; }
+
+    /* ── Module Cards ── */
+    .module-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .module-card {
+      display: block; background: #fff; border: 1px solid #e0d0f0;
+      border-radius: 14px; padding: 1.6rem 1.4rem;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .module-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; background: linear-gradient(90deg, #6b4c8a, #9a6abc);
+    }
+    .module-card:hover { box-shadow: 0 6px 24px rgba(80,40,120,0.14); transform: translateY(-3px); }
+    .module-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .module-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: #2a1a3a; }
+    .module-card p { font-size: 0.83rem; color: #666; line-height: 1.55; margin-bottom: 1rem; }
+    .module-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.82rem; font-weight: 700; color: #6b4c8a;
+      border: 1.5px solid #c0a0e0; border-radius: 6px;
+      padding: 0.3rem 0.8rem; transition: all 0.2s;
+    }
+    .module-link:hover { background: #6b4c8a; color: #fff; border-color: #6b4c8a; }
+
+    /* ── Lesson Overview ── */
+    .lesson-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .overview-card {
+      background: #fff; border: 1px solid #e0d0f0; border-radius: 14px;
+      padding: 1.6rem 1.8rem;
+    }
+    .overview-card h3 { font-size: 1rem; font-weight: 700; color: #3a1a5a; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .overview-list { list-style: none; }
+    .overview-list li { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.45rem 0; border-bottom: 1px solid #f5f0fb; font-size: 0.88rem; color: #444; line-height: 1.5; }
+    .overview-list li:last-child { border-bottom: none; }
+    .overview-list .li-icon { font-size: 0.9rem; margin-top: 2px; flex-shrink: 0; }
+
+    /* ── Quick Access Strip ── */
+    .quick-strip {
+      background: linear-gradient(135deg, #4a2a6a, #6b4c8a);
+      border-radius: 16px; padding: 2rem 2.2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .quick-text h3 { color: #fff; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .quick-text p { color: rgba(255,255,255,0.75); font-size: 0.87rem; }
+    .quick-btns { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+    .quick-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.15); color: #fff;
+      border: 1px solid rgba(255,255,255,0.28); border-radius: 8px;
+      padding: 0.5rem 1.1rem; font-size: 0.85rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .quick-btn:hover { background: rgba(255,255,255,0.28); }
+
+    /* ── Footer ── */
+    .site-footer { background: #1e1228; color: rgba(255,255,255,0.55); padding: 1.8rem 0; margin-top: 3.5rem; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; font-size: 0.82rem; }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .module-row { grid-template-columns: 1fr; }
+      .lesson-overview { grid-template-columns: 1fr; }
+      .top-nav { display: none; }
+      .hero-text h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="brand-badge">ACH II · AI</div>
+      <div>
+        <div class="site-title">Advanced Chinese for Humanities II</div>
+        <div class="site-subtitle">人文天下·高级汉语教程·下 · Unit 4</div>
+      </div>
+    </div>
+    <nav class="top-nav">
+      <a href="#modules">Modules</a>
+      <a href="#lesson">Lesson 4.0</a>
+      <a href="lesson-4-0-word.html">Word Explorer</a>
+      <a href="exercises-4-0.html">Exercises</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <p class="eyebrow">Unit 4 · 女性与社会 · AI Learning Platform</p>
+      <h2>中国女性的社会地位
+        <em>Chinese Women's Social Status</em>
+      </h2>
+      <p class="hero-desc">
+        Explore this lesson through vocabulary networks and character patterns,
+        annotated close reading with cultural notes, and interactive exercises with instant feedback.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-white" href="lesson-4-0-word.html">🔤 Start with Word Explorer</a>
+        <a class="btn btn-ghost" href="#modules">View all modules</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>Lesson 4.0 at a glance</h3>
+      <div class="hero-stat"><span>New words</span><strong>56</strong></div>
+      <div class="hero-stat"><span>Exercise sections</span><strong>8</strong></div>
+      <div class="hero-stat"><span>Reading passages</span><strong>2</strong></div>
+      <div class="hero-stat"><span>Character radicals</span><strong>3</strong></div>
+      <div class="hero-stat"><span>Usage guide entries</span><strong>7</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- Modules -->
+<section id="modules" class="section bg-white">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Learning Modules</p>
+      <h2>Three tools for Lesson 4.0</h2>
+      <p>Work through vocabulary, reading, and practice in any order.</p>
+    </div>
+    <div class="module-row">
+
+      <div class="module-card">
+        <div class="module-icon">🔤</div>
+        <h3>Word Explorer</h3>
+        <p>Build vocabulary networks by radical (女字旁, 米字旁, 木字旁), explore semantic fields, practice writing with HanziWriter, and study a usage guide for words English speakers commonly misuse.</p>
+        <a class="module-link" href="lesson-4-0-word.html">Open Word Explorer →</a>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon">📖</div>
+        <h3>Smart Reading</h3>
+        <p>Read the lesson text with interactive vocabulary tooltips (hover/tap for pinyin and English), plus collapsible cultural notes and grammar annotations written for English-speaking students.</p>
+        <a class="module-link" href="smart_reading_4_0.html">Open Smart Reading →</a>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon">✏️</div>
+        <h3>Interactive Exercises</h3>
+        <p>Eight exercise sections — fill-in-blank, vocabulary selection, word pairs, true/false with explanations, translation, open-ended writing, and discussion prompts — all with instant feedback.</p>
+        <a class="module-link" href="exercises-4-0.html">Open Exercises →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Lesson Overview -->
+<section id="lesson" class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Lesson 4.0 Overview</p>
+      <h2>What you'll study in this lesson</h2>
+    </div>
+    <div class="lesson-overview">
+
+      <div class="overview-card">
+        <h3>📚 Key Themes</h3>
+        <ul class="overview-list">
+          <li><span class="li-icon">▸</span>Women's status before and after the Song Dynasty</li>
+          <li><span class="li-icon">▸</span>The practice of foot-binding (缠足) and its social effects</li>
+          <li><span class="li-icon">▸</span>The May Fourth Movement (五四运动) and cultural change</li>
+          <li><span class="li-icon">▸</span>Women's rights after 1949 and the founding of the PRC</li>
+          <li><span class="li-icon">▸</span>Progress and remaining challenges in gender equality</li>
+          <li><span class="li-icon">▸</span>三从四德 and the Confucian code for women</li>
+        </ul>
+      </div>
+
+      <div class="overview-card">
+        <h3>🔡 Vocabulary Focus</h3>
+        <ul class="overview-list">
+          <li><span class="li-icon">▸</span><strong>女字旁</strong> — 妇、媳、嫁、婆、姻… (women, kinship, marriage)</li>
+          <li><span class="li-icon">▸</span><strong>米字旁</strong> — 糟 in 糟糕 (character family anchor)</li>
+          <li><span class="li-icon">▸</span><strong>木字旁 + 权</strong> — 夫权、权利、权益 (power and rights)</li>
+          <li><span class="li-icon">▸</span>Easily confused pairs: 享有 vs 享受, 甚至 vs 即使</li>
+          <li><span class="li-icon">▸</span>Formal writing words: 至此, 高于, 目前, 总之</li>
+          <li><span class="li-icon">▸</span>56 new words total in the vocabulary table</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Quick Access -->
+<section class="section bg-white">
+  <div class="container">
+    <div class="quick-strip">
+      <div class="quick-text">
+        <h3>Ready to start? Jump straight in.</h3>
+        <p>Open any module — they work independently and in any order.</p>
+      </div>
+      <div class="quick-btns">
+        <a class="quick-btn" href="lesson-4-0-word.html">🔤 Word Explorer</a>
+        <a class="quick-btn" href="smart_reading_4_0.html">📖 Smart Reading</a>
+        <a class="quick-btn" href="smart_reading_4_0b.html">📖 扩展阅读</a>
+        <a class="quick-btn" href="exercises-4-0.html">✏️ Exercises</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>Advanced Chinese for Humanities II · Unit 4 · Lesson 4.0</span>
+    <span>人文天下·高级汉语教程·下</span>
+  </div>
+</footer>
+
+</body>
+</html>

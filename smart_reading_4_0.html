@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reading 4.0 – 中国女性的社会地位</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif CN", Georgia, serif;
+      background: #faf8fd; color: #1e1228; line-height: 2; font-size: 18px;
+    }
+    .page-header {
+      background: linear-gradient(135deg, #4a2a6a 0%, #6b4c8a 100%);
+      color: #fff; padding: 24px 32px 20px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .page-header .back-link {
+      text-decoration: none; color: rgba(255,255,255,0.85);
+      font-size: 13px; font-family: sans-serif;
+      display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .page-header .back-link:hover { color: #fff; }
+    .page-header .badge {
+      background: rgba(255,255,255,0.22); border-radius: 6px;
+      padding: 4px 12px; font-size: 13px; letter-spacing: 1px;
+      font-family: sans-serif; white-space: nowrap;
+    }
+    .page-header h1 { font-size: 20px; flex: 1; }
+
+    .sub-nav {
+      background: #f5f0fb; border-bottom: 2px solid #d5c4ec;
+      padding: 10px 32px; display: flex; gap: 10px; flex-wrap: wrap; font-family: sans-serif;
+    }
+    .sub-nav a {
+      text-decoration: none; font-size: 13px; padding: 5px 14px;
+      border-radius: 999px; border: 1px solid #c4aee0; color: #4a2a6a; transition: background 0.15s;
+    }
+    .sub-nav a:hover, .sub-nav a.active { background: #6b4c8a; color: #fff; border-color: #6b4c8a; }
+
+    .audio-section {
+      background: #f5f0fb; border-bottom: 1px solid #d5c4ec;
+      padding: 12px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .audio-label {
+      font-size: 14px; color: #5a3e78; font-family: sans-serif;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .audio-placeholder {
+      flex: 1; background: #ede8f7; border: 2px dashed #b8a0d8;
+      border-radius: 8px; padding: 8px 16px; font-size: 13px;
+      color: #7a5a9a; font-family: sans-serif; text-align: center;
+    }
+
+    /* Legend bar */
+    .legend-bar {
+      max-width: 820px; margin: 24px auto 0; padding: 0 32px;
+      display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-family: sans-serif; font-size: 13px; color: #666;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+    .legend-dot.cultural { background: #e8f4fd; border: 1px solid #90c0e8; }
+    .legend-dot.grammar { background: #fef9ec; border: 1px solid #e8c850; }
+    .legend-dot.vocab-l { background: #f0ebfa; border: 1px solid #b090d0; }
+
+    .reading-wrap { max-width: 820px; margin: 0 auto; padding: 20px 32px 20px; }
+    .reading-title {
+      text-align: center; font-size: 26px; font-weight: 700;
+      letter-spacing: 2px; margin-bottom: 6px; color: #3a1a5a;
+    }
+    .reading-subtitle {
+      text-align: center; font-size: 13px; color: #8a6aaa;
+      font-family: sans-serif; margin-bottom: 30px; letter-spacing: 1px;
+    }
+    .reading-body p { text-indent: 2em; margin-bottom: 16px; }
+
+    /* ── Vocab Tooltips ── */
+    .vocab {
+      color: #6b1a9a; font-weight: bold; cursor: pointer;
+      position: relative; border-bottom: 1px dotted #6b1a9a; display: inline;
+    }
+    .vocab-tip {
+      display: none; position: absolute; bottom: calc(100% + 8px);
+      left: 50%; transform: translateX(-50%);
+      background: #1e1228; color: #faf8fd; border-radius: 8px;
+      padding: 8px 13px; white-space: nowrap; z-index: 100;
+      font-size: 14px; font-family: sans-serif; line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none;
+    }
+    .vocab-tip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%); border: 6px solid transparent;
+      border-top-color: #1e1228;
+    }
+    .vocab-tip .tip-pinyin { color: #c8a0f0; font-style: italic; display: block; font-size: 13px; }
+    .vocab-tip .tip-en { display: block; font-size: 13px; margin-top: 2px; }
+    @media (hover: hover) and (pointer: fine) { .vocab:hover .vocab-tip { display: block; } }
+    .vocab.tip-active .vocab-tip { display: block; }
+    .vocab.flip-down .vocab-tip { bottom: auto; top: calc(100% + 8px); }
+    .vocab.flip-down .vocab-tip::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #1e1228; }
+
+    /* ── Annotation Blocks ── */
+    .annotation-block {
+      margin: 6px 0 24px;
+      font-family: sans-serif; font-size: 14px; line-height: 1.65;
+      border-radius: 10px; overflow: hidden;
+    }
+    .annotation-block summary {
+      cursor: pointer; padding: 8px 14px;
+      font-weight: 600; font-size: 13px; letter-spacing: 0.03em;
+      display: flex; align-items: center; gap: 8px;
+      user-select: none; list-style: none;
+    }
+    .annotation-block summary::-webkit-details-marker { display: none; }
+    .annotation-block[open] summary { border-bottom: 1px solid; }
+    .annotation-block .notes-body { padding: 12px 14px; }
+    .annotation-block .note { display: flex; gap: 10px; margin-bottom: 10px; }
+    .annotation-block .note:last-child { margin-bottom: 0; }
+    .annotation-block .note-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    .annotation-block .note-text { color: #333; }
+    .annotation-block .note-text strong { font-weight: 700; }
+    .annotation-block .note-text em { font-style: italic; color: #555; }
+
+    /* Cultural note — blue */
+    .ann-cultural { background: #e8f4fd; border: 1px solid #90c0e8; }
+    .ann-cultural summary { background: #d0e9f8; color: #1a4a78; border-bottom-color: #90c0e8; }
+    /* Grammar note — yellow */
+    .ann-grammar { background: #fef9ec; border: 1px solid #e8c850; }
+    .ann-grammar summary { background: #fdf0c0; color: #7a5a00; border-bottom-color: #e8c850; }
+    /* Vocab usage — purple */
+    .ann-vocab { background: #f0ebfa; border: 1px solid #b090d0; }
+    .ann-vocab summary { background: #e4d8f5; color: #4a1a7a; border-bottom-color: #b090d0; }
+    /* Expand arrow */
+    .ann-arrow { margin-left: auto; font-size: 11px; opacity: 0.6; }
+    details[open] .ann-arrow::after { content: '▲'; }
+    details:not([open]) .ann-arrow::after { content: '▼'; }
+
+    .section-divider { border: none; border-top: 2px solid #d5c4ec; margin: 20px 0; }
+
+    .nav-links-wrap {
+      max-width: 820px; margin: 0 auto; padding: 12px 32px 48px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-family: sans-serif;
+    }
+    .nav-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; background: #6b4c8a; color: #fff;
+      padding: 10px 22px; border-radius: 8px; font-size: 14px;
+      font-weight: 600; transition: background 0.15s;
+    }
+    .nav-link:hover { background: #4a2a6a; }
+    .nav-link.secondary { background: #fff; color: #6b4c8a; border: 2px solid #6b4c8a; }
+    .nav-link.secondary:hover { background: #f3eefb; }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .reading-wrap, .nav-links-wrap { padding-left: 16px; padding-right: 16px; }
+      .page-header, .audio-section, .sub-nav { padding-left: 16px; padding-right: 16px; }
+      .reading-title { font-size: 22px; }
+      .legend-bar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-link" href="index.html">← 首页</a>
+  <div class="badge">课文 4.0</div>
+  <h1>女性・婚姻・社会 — Smart Reading</h1>
+</header>
+
+<nav class="sub-nav">
+  <a href="smart_reading_4_0.html" class="active">📖 课文：中国女性的社会地位</a>
+  <a href="smart_reading_4_0b.html">📖 扩展阅读：丑石</a>
+</nav>
+
+<div class="audio-section">
+  <div class="audio-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+    </svg>
+    朗读音频
+  </div>
+  <div class="audio-placeholder">
+    🎙️ 音频文件待上传 &nbsp;|&nbsp; <small>请将音频命名为 <code>audio/reading_4_0.mp3</code></small>
+  </div>
+</div>
+
+<!-- Legend -->
+<div class="legend-bar">
+  <span style="color:#444;font-weight:600">Annotation key:</span>
+  <div class="legend-item"><div class="legend-dot cultural"></div> Cultural/Historical Note</div>
+  <div class="legend-item"><div class="legend-dot grammar"></div> Grammar Pattern</div>
+  <div class="legend-item"><div class="legend-dot vocab-l"></div> Vocabulary Usage</div>
+  <span style="color:#aaa;font-size:12px">(click ▼ to expand)</span>
+</div>
+
+<div class="reading-wrap">
+  <h2 class="reading-title">中国女性的社会地位</h2>
+  <p class="reading-subtitle">第四单元 · 开篇 · 女性・婚姻・社会</p>
+
+  <div class="reading-body">
+
+    <!-- ── Paragraph 1 ── -->
+    <p>
+      中国历史上<vocab-w data-pinyin="qíshì fùnǚ" data-en="to discriminate against women">歧视妇女</vocab-w>、压迫妇女的现象很多。但并不是从一开始就是这样，妇女地位越来越低主要是从宋朝开始的。
+    </p>
+    <details class="annotation-block ann-cultural" open>
+      <summary>🌏 Cultural Note — Historical Overview <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">📌</span>
+          <div class="note-text">The text opens with a key claim: discrimination against women was <em>not</em> always present in Chinese history, but intensified starting with the <strong>Song Dynasty (宋朝, 960–1279 CE)</strong>. This "decline narrative" is a central argument of the essay — pay attention to how it unfolds across paragraphs.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">📖</span>
+          <div class="note-text"><strong>越来越低</strong> — "lower and lower; increasingly low." The pattern <strong>越来越 + adjective</strong> means "more and more ___." You'll see it throughout the text (e.g., 越来越多, 越来越高). It signals a progressive change over time.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 2 ── -->
+    <p>
+      宋朝以前，中国的妇女还是非常<vocab-w data-pinyin="kāifàng" data-en="open; open-minded">开放</vocab-w>的。比方说，汉朝末年的<vocab-w data-pinyin="Cài Wénjī" data-en="Cai Wenji, a poet of the late Han Dynasty">蔡文姬</vocab-w>虽然已经在匈奴结婚，而且生了两个孩子，但回到汉朝的土地以后，她又一次<vocab-w data-pinyin="chūjià" data-en="(of a woman) to get married; to marry">出嫁</vocab-w>。唐朝的公主嫁过三次的有三位，嫁过两次的有二十七位。可以说，宋朝以前，再嫁并不是什么<vocab-w data-pinyin="jiànbudé rén" data-en="shameful; not fit to be seen">见不得人</vocab-w>的事，社会不要求女人<vocab-w data-pinyin="cóng yī ér zhōng" data-en="to be faithful to one husband till death">从一而终</vocab-w>，对<vocab-w data-pinyin="zhēnnǚ" data-en="chaste woman; widow who does not remarry">贞女</vocab-w>也不太<vocab-w data-pinyin="zàihu" data-en="to care about; to mind">在乎</vocab-w>。唐朝以前，妇女不但有再嫁的自由，而且可以参加各种各样的公共活动。
+    </p>
+    <details class="annotation-block ann-cultural">
+      <summary>🌏 Cultural Note — Pre-Song Openness <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">👩‍🎨</span>
+          <div class="note-text"><strong>蔡文姬 (Cài Wénjī)</strong> — A celebrated poet and musician of the late Han Dynasty (c. 177–249 CE). She was captured by the Xiongnu (匈奴), a nomadic steppe people, married a Xiongnu chieftain, and had children with him. She was later ransomed by the Han general Cao Cao and remarried. Her story, especially her lament poem <em>胡笳十八拍</em>, is famous in Chinese literary history.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">🏯</span>
+          <div class="note-text"><strong>The Tang Dynasty (唐朝, 618–907 CE)</strong> is often considered a relatively cosmopolitan and socially open era in Chinese history. Foreign cultures, religions (Buddhism, Islam, Nestorianism), and fashions were embraced. The high remarriage rate among Tang princesses reflects a less rigid social code than later periods.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">📜</span>
+          <div class="note-text"><strong>从一而终</strong> (cóng yī ér zhōng) — literally "follow one [husband] to the end [of life]." This Confucian ideal, demanding a woman's lifelong loyalty to one husband (including not remarrying after widowhood), became a strict social expectation only after the Song Dynasty strengthened Neo-Confucian orthodoxy.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 3 ── -->
+    <p>
+      你也许听说过中国妇女有<vocab-w data-pinyin="chánzú" data-en="to bind feet; foot-binding">缠足</vocab-w>的习惯，其实这种现象是从宋朝才开始流行起来的，此后中国女性的地位变得越来越低。在宋朝和以后的几百年中，女孩子如果不缠足，有一双大脚，就会被人<vocab-w data-pinyin="chǐxiào" data-en="to mock; to ridicule; to sneer at">耻笑</vocab-w>，<vocab-w data-pinyin="shènzhì" data-en="even; so much so that">甚至</vocab-w>找不到<vocab-w data-pinyin="pójia" data-en="husband's family; in-laws' home">婆家</vocab-w>。有一双小脚的女孩子才被认为是美的，所以在女孩还很小的时候，大人就开始给她们缠足，不让脚自然地生长。缠足以后，就像穿上了<vocab-w data-pinyin="gāogēnxié" data-en="high-heeled shoes">高跟鞋</vocab-w>一样，完全<vocab-w data-pinyin="gǎibiàn" data-en="to change; to alter">改变</vocab-w>了女孩子走路的样子。女孩子再也不能出去参加各种活动了，她们被<vocab-w data-pinyin="jìngù" data-en="to confine; to imprison; to restrict">禁锢</vocab-w>在家里，无法了解、关心外面的世界，成了男性的<vocab-w data-pinyin="núlì" data-en="slave">奴隶</vocab-w>。
+    </p>
+    <details class="annotation-block ann-cultural">
+      <summary>🌏 Cultural Note — Foot-Binding (缠足) <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">🦶</span>
+          <div class="note-text"><strong>Foot-binding (缠足)</strong> began in the Song Dynasty and persisted until the early 20th century. Girls' feet were tightly bound from age 4–6 to prevent growth, aiming for a "golden lotus" (金莲) of about 3 inches. The practice caused permanent bone deformation and was intensely painful but was considered a mark of beauty and femininity — and was essentially required for marriage into respectable families.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">🏛️</span>
+          <div class="note-text">The practice was connected to Neo-Confucianism's increasingly strict gender norms, which emphasized female modesty, confinement to the home, and submission. Foot-binding physically enforced this confinement — a woman with bound feet could not walk far or fast. Anti-foot-binding campaigns began in the late Qing Dynasty and were accelerated by the May Fourth Movement (1919).</div>
+        </div>
+      </div>
+    </details>
+    <details class="annotation-block ann-vocab">
+      <summary>📝 Vocabulary Note — 甚至 vs. 即使 / 再也不能 <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">🔎</span>
+          <div class="note-text"><strong>甚至 (shènzhì)</strong> = "even; so much so that" — used to introduce an extreme, surprising, or additional consequence. Example: <em>她不但找不到工作，甚至连家都没了。</em> (She not only couldn't find work, she even lost her home.) Watch for 甚至 and 即使 appearing in the same text — they serve very different functions.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">🔎</span>
+          <div class="note-text"><strong>再也不能…了</strong> — "can never again…; no longer able to." The adverb <strong>再也</strong> + negative verb emphasizes a permanent, irreversible inability. Compare: 不能 (can't right now) vs. 再也不能 (can never again). Example: <em>缠足以后，她再也不能自由地奔跑了。</em></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 4 ── -->
+    <p>
+      1919年5月4日，中国发生了著名的"五四"运动。这以后，缠足现象才慢慢<vocab-w data-pinyin="xiāoshī" data-en="to disappear; to vanish">消失</vocab-w>。"五四"运动给中国社会带来了很多新的<vocab-w data-pinyin="fēngqì" data-en="social atmosphere; common practice">风气</vocab-w>，但家庭中的<vocab-w data-pinyin="fūquán" data-en="husband's authority; patriarchal power">夫权</vocab-w>观念、女性必须"<vocab-w data-pinyin="sāncóng sìdé" data-en="the three obediences and four virtues (traditional Confucian code for women)">三从四德</vocab-w>"的文化延续了下来，几十年中一直没有太大的变化。做妻子的要听丈夫的话，做女儿的要听父母的话，做<vocab-w data-pinyin="xífù" data-en="daughter-in-law; wife">媳妇</vocab-w>的要听<vocab-w data-pinyin="gōngpó" data-en="husband's parents; parents-in-law">公婆</vocab-w>的话，许多女性的家庭<vocab-w data-pinyin="quányì" data-en="rights and interests; rights and benefits">权益</vocab-w>受到<vocab-w data-pinyin="qīnfàn" data-en="to infringe on; to violate">侵犯</vocab-w>。更<vocab-w data-pinyin="zāogāo" data-en="terrible; too bad">糟糕</vocab-w>的是，家庭中侵犯女性权益的人常常也是女性——如婆婆、<vocab-w data-pinyin="hòumǔ" data-en="stepmother">后母</vocab-w>。"多年的媳妇熬成婆"，婆婆们经常用一种不健康的<vocab-w data-pinyin="xīntài" data-en="mindset; mentality">心态</vocab-w>，重复自己的婆婆当年用过的办法，有时候甚至更严重地侵犯媳妇的权益和自由。后母<vocab-w data-pinyin="nüèdài" data-en="to mistreat; to abuse">虐待</vocab-w>女儿的情况也经常发生。<vocab-w data-pinyin="jíshǐ" data-en="even though; even if">即使</vocab-w>在家中没有受到婆婆或后母的虐待，女性也得受到父亲和公公的压迫。
+    </p>
+    <details class="annotation-block ann-cultural">
+      <summary>🌏 Cultural Note — May Fourth Movement & 三从四德 <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">✊</span>
+          <div class="note-text"><strong>The May Fourth Movement (五四运动, 1919)</strong> — On May 4, 1919, students in Beijing protested the Treaty of Versailles, which awarded Germany's former territories in China to Japan. The movement quickly became a broad cultural and intellectual revolution calling for science (科学), democracy (民主), and an end to traditional Confucian values. It is often considered the birth of Chinese cultural modernism and had lasting effects on gender norms, literature, and politics.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">📜</span>
+          <div class="note-text"><strong>三从四德 (sāncóng sìdé)</strong> — "Three Obediences and Four Virtues" — the classical Confucian code of conduct for women. The <em>Three Obediences</em>: obey your father before marriage, obey your husband after marriage, obey your son after your husband dies. The <em>Four Virtues</em>: wifely virtue (德), appropriate speech (言), modest appearance (容), and diligent work (功).</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">🗣️</span>
+          <div class="note-text"><strong>"多年的媳妇熬成婆"</strong> — a proverb meaning "After years of being a daughter-in-law, one finally becomes a mother-in-law." It describes a cycle of suffering: women who endured harsh treatment from their own mothers-in-law often repeated — or worsened — that treatment once they gained the same position of authority. The text uses this to argue that oppression can be self-perpetuating within a system.</div>
+        </div>
+      </div>
+    </details>
+    <details class="annotation-block ann-vocab">
+      <summary>📝 Vocabulary Note — 即使 vs. 甚至 / 权益 vs. 权利 <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">⚖️</span>
+          <div class="note-text"><strong>即使 (jíshǐ)</strong> = "even if / even though" — introduces a hypothetical or concessive condition. The outcome is true regardless. Structure: <em>即使…，也…</em> ("Even if…, still…"). Compare: <em>即使没有被虐待，女性也受到压迫。</em> Do NOT confuse with <strong>甚至</strong> (which adds an extreme further point, not a condition).</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">⚖️</span>
+          <div class="note-text"><strong>权益 (quányì)</strong> vs. <strong>权利 (quánlì)</strong>: Both relate to "rights," but 权利 refers to specific legal or civil rights (voting rights, property rights), while 权益 is broader — "rights and interests/benefits" — often used in contexts of protection from harm or exploitation (e.g., consumer rights, women's rights in a family context). Both appear in this text.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 5 ── -->
+    <p>
+      1949年以后，中国妇女的地位得到了很大的<vocab-w data-pinyin="tígāo" data-en="to raise; to improve; to enhance">提高</vocab-w>。她们开始在政治、经济、文化、教育等各个方面<vocab-w data-pinyin="xiǎngyǒu" data-en="to enjoy (rights, privileges)">享有</vocab-w>与男性<vocab-w data-pinyin="píngděng" data-en="equal; equality">平等</vocab-w>的<vocab-w data-pinyin="quánlì" data-en="right; privilege">权利</vocab-w>。她们不但有了<vocab-w data-pinyin="hūnyīn" data-en="marriage; matrimony">婚姻</vocab-w>自由，也跟男性一样有了<vocab-w data-pinyin="xuǎnjǔ" data-en="to elect; to vote">选举</vocab-w>权和被选举权。到七十年代末，中国有30%的政府官员是女性，这是中国几千年历史上从来没有过的现象。大多数女性走出家门，跟丈夫一样出去工作。这不但增加了家庭的收入，提高了生活水平，也改变了女性在社会和家庭中的地位。至此，中国基本上实现了男女平等。
+    </p>
+    <details class="annotation-block ann-cultural">
+      <summary>🌏 Cultural Note — 1949 and the PRC <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">🏳️</span>
+          <div class="note-text"><strong>1949</strong> marks the founding of the <strong>People's Republic of China (中华人民共和国)</strong>. The Chinese Communist Party promoted gender equality as a core ideological principle — Mao Zedong's slogan "Women hold up half the sky" (妇女能顶半边天) became nationally famous. The Marriage Law of 1950 explicitly banned foot-binding, child marriage, and concubinage, and gave women equal rights to divorce and inherit property.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">🗳️</span>
+          <div class="note-text"><strong>选举权和被选举权</strong> — the right to vote and the right to stand for election. Chinese women gained both simultaneously with the 1949 Constitution — unlike in many Western democracies where these rights were granted separately and much later (e.g., women in Switzerland didn't gain full voting rights until 1971).</div>
+        </div>
+      </div>
+    </details>
+    <details class="annotation-block ann-vocab">
+      <summary>📝 Vocabulary Note — 享有 vs. 享受 / 至此 <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">🔎</span>
+          <div class="note-text"><strong>享有 (xiǎngyǒu)</strong> vs. <strong>享受 (xiǎngshòu)</strong> — These look similar but are NOT interchangeable. <strong>享有</strong> is used for rights, status, or privileges: <em>享有选举权</em> (to enjoy voting rights), <em>享有声誉</em> (to have a good reputation). <strong>享受</strong> is for pleasures and material comforts: <em>享受美食</em> (to enjoy good food), <em>享受生活</em> (to enjoy life). Using 享受 for rights sounds odd in Chinese.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">🔎</span>
+          <div class="note-text"><strong>至此 (zhì cǐ)</strong> = "at this point; up to here; by this time." A formal written transition marker used to signal that a stage or process has been reached. Common in academic and journalistic writing. It signals a conclusion to a phase of the argument before moving on.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 6 ── -->
+    <p>
+      上个世纪八十年代前后，中国实行的改革开放政策使中国的经济得到了飞速发展。这期间，尤其是本世纪初以来，中国人的生活发生了<vocab-w data-pinyin="fāntiān fùdì" data-en="earth-shaking; world-changing">翻天覆地</vocab-w>的变化。过去的二十年间，中国为推进<vocab-w data-pinyin="xìngbié" data-en="gender; sex">性别</vocab-w>平等与妇女发展，制定了不少保护妇女权益的政策和法律。今天，接受高等教育的年轻女性越来越多，她们在毕业之后基本上都选择了进入<vocab-w data-pinyin="zhíchǎng" data-en="workplace; the job market">职场</vocab-w>。据调查，2013年，中国女性就业人数为三亿四千多万，是就业总人数的45%；15岁以上女性文盲<vocab-w data-pinyin="lǜ" data-en="rate; ratio; frequency">率</vocab-w>为6.7%，比1995年下降了17.4个百分点。另外，在个人收入方面，近些年中国女性的工资也明显提高，<vocab-w data-pinyin="shīyè" data-en="to lose one's job; unemployment">失业</vocab-w>率连年下降。
+    </p>
+    <details class="annotation-block ann-cultural">
+      <summary>🌏 Cultural Note — Reform Era & Statistics <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">📈</span>
+          <div class="note-text"><strong>改革开放 (gǎigé kāifàng)</strong> — "Reform and Opening Up" — the economic policy initiated by Deng Xiaoping starting around 1978. It transformed China from a centrally planned economy to a market-oriented one, leading to decades of rapid GDP growth. For women, this brought expanded employment opportunities but also new pressures and inequalities as the market rewarded some forms of gender discrimination.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">📊</span>
+          <div class="note-text">The statistics cited (2013 data) reflect the period when this textbook was written. Note the essay's rhetorical strategy: it acknowledges genuine progress (employment numbers, literacy rates, wage increases) before pivoting to remaining problems in the next paragraph. This balanced structure — "progress, but…" — is a common pattern in analytical Chinese writing.</div>
+        </div>
+      </div>
+    </details>
+    <details class="annotation-block ann-grammar">
+      <summary>✏️ Grammar Note — 率 as a suffix / 高于 as a comparison <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">📐</span>
+          <div class="note-text"><strong>率 (lǜ)</strong> — a suffix meaning "rate / ratio / percentage." It attaches to nouns to form compound words: 失业率 (unemployment rate), 文盲率 (illiteracy rate), 比率 (ratio), 出生率 (birth rate), 死亡率 (death/mortality rate). It always comes at the end.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 7 ── -->
+    <p>
+      以上成就值得肯定，但我们也要认识到，要从根本上实现男女性别平等，我们还有很大的努力空间。<vocab-w data-pinyin="mùqián" data-en="at present; currently">目前</vocab-w>，男性的平均收入仍然远高于女性。根据2011年全球性别<vocab-w data-pinyin="chājù" data-en="gap; disparity; difference">差距</vocab-w>报告，中国的男女收入<vocab-w data-pinyin="bǐlǜ" data-en="ratio; rate; proportion">比率</vocab-w>为1: 0.65，这与世界发达国家相比还有很大的差别。另外，女性中"干得好不如嫁得好"的观念重新<vocab-w data-pinyin="táitóu" data-en="to raise one's head; to gain ground; to resurface">抬头</vocab-w>，有些地方"<vocab-w data-pinyin="bāo èrnǎi" data-en="to keep a mistress; to financially support a second wife">包二奶</vocab-w>"的现象<vocab-w data-pinyin="pǔbiàn" data-en="widespread; common; universal">普遍</vocab-w>，妇女的地位甚至有走<vocab-w data-pinyin="xiàpōlù" data-en="downhill; decline; going downward">下坡路</vocab-w>的危险。
+    </p>
+    <details class="annotation-block ann-cultural">
+      <summary>🌏 Cultural Note — Contemporary Challenges <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">💬</span>
+          <div class="note-text"><strong>"干得好不如嫁得好"</strong> — "It's better to marry well than to work well." This popular saying reflects a cultural backlash against women's professional advancement in modern China. With rising property prices and wealth inequality, some young women began to see marrying a wealthy man as more economically rational than building a career — a trend that concerned feminist scholars and the government alike.</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">💰</span>
+          <div class="note-text"><strong>包二奶 (bāo èrnǎi)</strong> — literally "support a second wife/mistress." This phenomenon became more visible during China's economic boom of the 1990s–2000s, when newly wealthy businessmen in some regions kept mistresses (often called 二奶, "second wives"), housed and financially supported by them. It is widely considered exploitative and a marker of gender inequality.</div>
+        </div>
+      </div>
+    </details>
+    <details class="annotation-block ann-grammar">
+      <summary>✏️ Grammar Note — 高于 / 远高于 as comparisons <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">📐</span>
+          <div class="note-text"><strong>高于 (gāo yú)</strong> = "higher than" — an alternative comparison structure to 比. With 于: <em>男性收入高于女性</em> (Men's income is higher than women's). With 比: <em>男性收入比女性高</em> (same meaning). The 于-structure is more formal and common in written/analytical texts. Other examples: 低于 (lower than), 多于 (more than), 少于 (fewer than), 大于 (greater than).</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">📐</span>
+          <div class="note-text"><strong>远高于</strong> — "far/much higher than." Adding 远 (far) before a comparative adjective intensifies it: 远高于, 远低于, 远大于. This is a common pattern in formal Chinese writing when making strong contrasts.</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── Paragraph 8 ── -->
+    <p>
+      总之，过去的几十年中，中国在保护妇女、提高妇女地位问题上做出了很多努力。但作为世界上人口最多的发展中国家，受经济发展水平和传统文化的影响，中国妇女的地位问题还<vocab-w data-pinyin="miànlín" data-en="to face; to be confronted with">面临</vocab-w>很多新的<vocab-w data-pinyin="tiǎozhàn" data-en="challenge; to challenge">挑战</vocab-w>。因此，要实现女性跟男性的<vocab-w data-pinyin="zhēnzhèng" data-en="true; genuine; real">真正</vocab-w>平等，除了政府的政策及相应的法律之外，还需要女性提高自身的<vocab-w data-pinyin="sùzhì" data-en="quality; inner character">素质</vocab-w>，努力创造一个自由、平等、无性别歧视的社会环境。我们期待着中国女性在不久的将来<vocab-w data-pinyin="yōngyǒu" data-en="to have; to possess; to own">拥有</vocab-w>一个更<vocab-w data-pinyin="guǎngkuò" data-en="vast; wide; broad">广阔</vocab-w>的天空。
+    </p>
+    <details class="annotation-block ann-grammar">
+      <summary>✏️ Grammar Note — Conclusion Structures / 除了…之外，还… <span class="ann-arrow"></span></summary>
+      <div class="notes-body">
+        <div class="note">
+          <span class="note-icon">📐</span>
+          <div class="note-text"><strong>除了…之外，还需要…</strong> — "In addition to…, one also needs…" This structure adds a further requirement or condition. It's common in analytical conclusions: <em>除了政府的政策之外，还需要个人努力。</em> (In addition to government policy, individual effort is also needed.) Do not confuse this with the exclusive 除了…以外 (除了他，大家都来了 — "Everyone came except him").</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">📐</span>
+          <div class="note-text"><strong>总之 (zǒng zhī)</strong> = "in short; in a word; in conclusion." A common discourse marker signaling a summary or concluding statement. Similar transitions: 综上所述 (more formal, "based on the above"), 因此 (therefore), 所以 (so).</div>
+        </div>
+        <div class="note">
+          <span class="note-icon">💡</span>
+          <div class="note-text"><strong>素质 (sùzhì)</strong> — "quality; overall character and capability." Often translated as "quality" but refers to a person's or group's inner moral, intellectual, and cultural development. "提高素质" is a frequent phrase in Chinese public discourse about social improvement — it implies that individuals should cultivate themselves, not just rely on external systems.</div>
+        </div>
+      </div>
+    </details>
+
+  </div><!-- /reading-body -->
+
+  <hr class="section-divider">
+
+  <!-- Quick reference -->
+  <div style="font-family:sans-serif; background:#f5f0fb; border-radius:10px; padding:16px 20px; font-size:13px; color:#4a2a6a; margin-top:8px;">
+    <strong>📌 Key Grammar Patterns in This Text</strong>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 24px;margin-top:10px;line-height:1.7;">
+      <div>越来越 + adj. → "more and more…"</div>
+      <div>甚至 → "even; so much so that"</div>
+      <div>即使…也… → "even if…, still…"</div>
+      <div>再也不能…了 → "can never again…"</div>
+      <div>享有 (rights) vs. 享受 (pleasures)</div>
+      <div>至此 → formal transition "at this point"</div>
+      <div>高于 / 远高于 → formal comparison</div>
+      <div>除了…之外，还… → "in addition to…"</div>
+    </div>
+  </div>
+
+</div><!-- /reading-wrap -->
+
+<div class="nav-links-wrap">
+  <a class="nav-link secondary" href="index.html">← 返回首页</a>
+  <a class="nav-link secondary" href="exercises-4-0.html">练习 Exercises →</a>
+  <a class="nav-link" href="smart_reading_4_0b.html">扩展阅读：丑石 →</a>
+</div>
+
+<script>
+/* ── Build Vocab Tooltips ── */
+(function buildVocab() {
+  document.querySelectorAll('vocab-w').forEach(el => {
+    const span = document.createElement('span');
+    span.className = 'vocab';
+    span.innerHTML = `${el.textContent}<span class="vocab-tip"><span class="tip-pinyin">${el.dataset.pinyin||''}</span><span class="tip-en">${el.dataset.en||''}</span></span>`;
+    el.replaceWith(span);
+  });
+})();
+
+/* ── Touch support for vocab ── */
+let activeVocab = null;
+document.addEventListener('touchstart', function(e) {
+  const v = e.target.closest('.vocab');
+  if (v) {
+    e.preventDefault();
+    v.classList[v.getBoundingClientRect().top < 80 ? 'add' : 'remove']('flip-down');
+    if (activeVocab && activeVocab !== v) activeVocab.classList.remove('tip-active');
+    v.classList.toggle('tip-active');
+    activeVocab = v.classList.contains('tip-active') ? v : null;
+  } else {
+    if (activeVocab) { activeVocab.classList.remove('tip-active'); activeVocab = null; }
+  }
+}, { passive: false });
+</script>
+</body>
+</html>

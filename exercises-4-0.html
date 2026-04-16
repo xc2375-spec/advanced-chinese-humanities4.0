@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercises 4.0 – 中国女性的社会地位</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pu:#6b4c8a;--pud:#4a2a6a;--pul:#f5f0fb;--pub:#ede8f7;--puline:#d5c4ec;--ok:#2d6a4f;--okbg:#d8f3dc;--err:#922b21;--errbg:#fde8e8;--warn:#7d6608;--warnbg:#fef9c3}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#faf8fd;color:#1e1228;line-height:1.75;font-size:15px}
+
+/* ── Header ── */
+.site-header{background:linear-gradient(135deg,var(--pud),var(--pu));color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+.site-header a.back{color:rgba(255,255,255,.8);font-size:13px;text-decoration:none;white-space:nowrap}
+.site-header a.back:hover{color:#fff}
+.badge{background:rgba(255,255,255,.22);border-radius:6px;padding:4px 12px;font-size:12px;letter-spacing:.05em}
+.site-header h1{font-size:17px;flex:1}
+
+/* ── Progress bar ── */
+.progress-bar{background:var(--pul);border-bottom:1px solid var(--puline);padding:10px 24px;display:flex;align-items:center;gap:16px;font-size:13px;color:var(--pud);flex-wrap:wrap}
+.progress-bar strong{color:var(--pu);min-width:60px}
+.prog-track{flex:1;min-width:120px;height:6px;background:#ddd;border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:var(--pu);border-radius:99px;transition:width .4s}
+
+/* ── Nav tabs ── */
+.ex-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:16px 24px 0;max-width:900px;margin:0 auto}
+.ex-tab{padding:7px 14px;border-radius:8px 8px 0 0;border:1px solid var(--puline);border-bottom:none;background:#fff;color:var(--pud);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.ex-tab:hover{background:var(--pul)}
+.ex-tab.active{background:var(--pu);color:#fff;border-color:var(--pu)}
+
+/* ── Main layout ── */
+.ex-wrap{max-width:900px;margin:0 auto;padding:0 24px 60px}
+.ex-section{display:none}
+.ex-section.active{display:block}
+.ex-header{background:var(--pu);color:#fff;padding:16px 22px;border-radius:12px 12px 0 0;margin-top:-1px}
+.ex-header h2{font-size:16px;font-weight:700}
+.ex-header p{font-size:13px;opacity:.85;margin-top:4px;line-height:1.5}
+.ex-body{background:#fff;border:1px solid var(--puline);border-top:none;border-radius:0 0 12px 12px;padding:24px}
+
+/* ── Instructions box ── */
+.instructions{background:var(--pul);border:1px solid var(--puline);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--pud);line-height:1.6}
+.instructions strong{color:var(--pu)}
+
+/* ── Word bank ── */
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;background:#f9f7fe;border:2px dashed var(--puline);border-radius:8px;margin-bottom:20px}
+.word-bank span{background:#fff;border:1px solid var(--puline);border-radius:20px;padding:4px 12px;font-size:14px;font-weight:600;color:var(--pud);cursor:default}
+.word-bank span.used{opacity:.35;text-decoration:line-through}
+
+/* ── Fill-in-blank ── */
+.fill-para{margin-bottom:24px;line-height:2.2;font-size:15px}
+.blank-wrap{display:inline-flex;flex-direction:column;align-items:center;vertical-align:bottom;margin:0 2px}
+.blank-input{border:none;border-bottom:2px solid var(--pu);background:transparent;width:72px;text-align:center;font-size:15px;font-family:inherit;color:var(--pud);outline:none;padding:2px 4px}
+.blank-input.ok{border-color:var(--ok);color:var(--ok);background:var(--okbg)}
+.blank-input.err{border-color:var(--err);color:var(--err);background:var(--errbg)}
+.blank-hint{font-size:11px;color:var(--err);margin-top:2px;display:none}
+.blank-input.err + .blank-hint{display:block}
+
+/* ── Sentence group ── */
+.sentence-group{margin-bottom:18px;padding:14px 16px;background:#faf8fd;border-radius:8px;border:1px solid var(--puline)}
+.sentence-group .s-num{font-weight:700;color:var(--pu);margin-right:6px}
+.sentence-group .s-text{font-size:15px;line-height:2}
+.sentence-group .s-input{border:none;border-bottom:2px solid var(--pu);background:transparent;width:80px;text-align:center;font-size:15px;font-family:inherit;color:var(--pud);outline:none;padding:2px 4px}
+.sentence-group .s-input.ok{border-color:var(--ok);color:var(--ok);background:var(--okbg);border-radius:4px}
+.sentence-group .s-input.err{border-color:var(--err);color:var(--err);background:var(--errbg);border-radius:4px}
+.s-feedback{font-size:13px;margin-top:8px;padding:7px 12px;border-radius:6px;display:none}
+.s-feedback.show{display:block}
+.s-feedback.ok{background:var(--okbg);color:var(--ok)}
+.s-feedback.err{background:var(--errbg);color:var(--err)}
+
+/* ── Choose between two words ── */
+.pair-group{margin-bottom:18px;padding:14px 16px;background:#faf8fd;border-radius:8px;border:1px solid var(--puline)}
+.pair-label{font-size:13px;font-weight:700;color:var(--pu);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.pair-badge{background:var(--pu);color:#fff;border-radius:20px;padding:2px 10px;font-size:12px}
+.pair-sentence{font-size:15px;line-height:2.1;margin-bottom:6px}
+.pair-select{border:1.5px solid var(--puline);border-radius:6px;padding:4px 10px;font-size:14px;font-family:inherit;background:#fff;color:var(--pud);outline:none;cursor:pointer}
+.pair-select:focus{border-color:var(--pu)}
+.pair-select.ok{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.pair-select.err{border-color:var(--err);background:var(--errbg);color:var(--err)}
+.pair-feedback{font-size:13px;margin-top:6px;padding:6px 10px;border-radius:6px;display:none}
+.pair-feedback.show{display:block}
+.pair-feedback.ok{background:var(--okbg);color:var(--ok)}
+.pair-feedback.err{background:var(--errbg);color:var(--err)}
+
+/* ── T/F ── */
+.tf-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:#faf8fd;border:1px solid var(--puline);border-radius:8px;margin-bottom:12px}
+.tf-num{font-weight:700;color:var(--pu);min-width:24px}
+.tf-statement{flex:1;font-size:15px;line-height:1.65}
+.tf-btns{display:flex;gap:8px;flex-shrink:0}
+.tf-btn{padding:6px 16px;border-radius:6px;border:1.5px solid var(--puline);background:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.tf-btn:hover:not(:disabled){background:var(--pul)}
+.tf-btn.selected-t{background:var(--pu);color:#fff;border-color:var(--pu)}
+.tf-btn.selected-f{background:var(--pu);color:#fff;border-color:var(--pu)}
+.tf-btn.correct{background:var(--okbg);color:var(--ok);border-color:var(--ok)}
+.tf-btn.wrong{background:var(--errbg);color:var(--err);border-color:var(--err)}
+.tf-btn:disabled{cursor:default}
+.tf-expl{font-size:13px;margin-top:8px;padding:7px 12px;border-radius:6px;display:none;line-height:1.55}
+.tf-expl.show{display:block}
+.tf-expl.ok{background:var(--okbg);color:var(--ok)}
+.tf-expl.err{background:var(--errbg);color:var(--err)}
+
+/* ── Open-ended ── */
+.open-q{margin-bottom:20px;padding:16px;background:#faf8fd;border:1px solid var(--puline);border-radius:8px}
+.open-q .q-num{font-weight:700;color:var(--pu);margin-right:8px}
+.open-q textarea{width:100%;min-height:90px;border:1.5px solid var(--puline);border-radius:8px;padding:10px;font-size:14px;font-family:inherit;resize:vertical;outline:none;margin-top:10px;background:#fff}
+.open-q textarea:focus{border-color:var(--pu)}
+.model-toggle{font-size:13px;color:var(--pu);cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block}
+.model-answer{display:none;margin-top:10px;padding:12px 14px;background:var(--warnbg);border:1px solid #e9d100;border-radius:8px;font-size:14px;line-height:1.65;color:var(--warn)}
+.model-answer.show{display:block}
+.model-answer strong{display:block;margin-bottom:6px;font-size:13px}
+
+/* ── Translate section ── */
+.translate-src{background:#f0f4ff;border:1px solid #c0ccee;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:14px;line-height:1.7;font-style:italic;color:#2c3e6a}
+
+/* ── Buttons ── */
+.btn-check{background:var(--pu);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;transition:opacity .15s}
+.btn-check:hover{opacity:.85}
+.btn-reset{background:#fff;color:var(--pud);border:1.5px solid var(--puline);border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;margin-left:8px;transition:background .15s}
+.btn-reset:hover{background:var(--pul)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:18px}
+
+/* ── Score summary ── */
+.score-box{background:#fff;border:2px solid var(--puline);border-radius:12px;padding:20px 24px;text-align:center;margin-top:20px;display:none}
+.score-box.show{display:block}
+.score-big{font-size:36px;font-weight:700;color:var(--pu)}
+.score-label{color:#666;font-size:14px;margin-top:4px}
+
+/* ── Writing links ── */
+.writing-promo{background:var(--pul);border:1px solid var(--puline);border-radius:10px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.writing-promo p{font-size:14px;color:var(--pud);flex:1}
+.writing-promo a{background:var(--pu);color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;white-space:nowrap;transition:opacity .15s}
+.writing-promo a:hover{opacity:.85}
+
+/* ── Nav footer ── */
+.nav-footer{max-width:900px;margin:0 auto;padding:20px 24px 40px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nav-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;transition:opacity .15s}
+.nav-link.sec{background:#fff;color:var(--pud);border:1.5px solid var(--puline)}
+.nav-link.pri{background:var(--pu);color:#fff}
+.nav-link:hover{opacity:.82}
+
+@media(max-width:600px){
+  .ex-tabs{padding:12px 12px 0;gap:4px}
+  .ex-tab{padding:6px 10px;font-size:12px}
+  .ex-wrap{padding:0 12px 60px}
+  .tf-item{flex-direction:column}
+  .tf-btns{margin-top:8px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="back" href="index.html">← 首页</a>
+  <div class="badge">练习 4.0</div>
+  <h1>中国女性的社会地位 — 练习 Exercises</h1>
+</header>
+
+<div class="progress-bar">
+  <strong id="prog-label">0 / 0 完成</strong>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <span style="color:#888;font-size:12px">答题后自动记录进度</span>
+</div>
+
+<div class="ex-tabs">
+  <button class="ex-tab active" onclick="showSection(0)">(一) 填空</button>
+  <button class="ex-tab" onclick="showSection(1)">(二) 选词</button>
+  <button class="ex-tab" onclick="showSection(2)">(三) 选择</button>
+  <button class="ex-tab" onclick="showSection(3)">(四) 造句</button>
+  <button class="ex-tab" onclick="showSection(4)">(五) 翻译</button>
+  <button class="ex-tab" onclick="showSection(5)">(六) 判断</button>
+  <button class="ex-tab" onclick="showSection(6)">(七) 问答</button>
+  <button class="ex-tab" onclick="showSection(7)">(八) 写作</button>
+</div>
+
+<div class="ex-wrap">
+
+<!-- ══════════════════════════════════
+  (一) 填空 Fill in the blanks
+══════════════════════════════════ -->
+<div class="ex-section active" id="sec0">
+  <div class="ex-header">
+    <h2>(一) 用课文中的词语填空</h2>
+    <p>Fill in the blanks with the appropriate words from the main text. Type the Chinese characters.</p>
+  </div>
+  <div class="ex-body">
+    <div class="instructions">
+      根据课文内容，在空白处填入合适的词语（每空一个词或词组）。<br>
+      <strong>提示：</strong>所有答案均来自课文原文。填写后点击"检查答案"查看结果。
+    </div>
+
+    <!-- Para 1 -->
+    <div class="fill-para">
+      <strong>1.</strong> 中国历史上<span class="blank-wrap"><input class="blank-input" data-ans="歧视" placeholder="___"><span class="blank-hint">→ 歧视</span></span>妇女、<span class="blank-wrap"><input class="blank-input" data-ans="压迫" placeholder="___"><span class="blank-hint">→ 压迫</span></span>妇女的现象很多。但并不是从一开始就是这样。宋朝以前，中国的妇女还是非常<span class="blank-wrap"><input class="blank-input" data-ans="开放" placeholder="___"><span class="blank-hint">→ 开放</span></span>的。社会不要求女人<span class="blank-wrap"><input class="blank-input" data-ans="从一而终" placeholder="______" style="width:96px"><span class="blank-hint">→ 从一而终</span></span>，对贞女也不太<span class="blank-wrap"><input class="blank-input" data-ans="在乎" placeholder="___"><span class="blank-hint">→ 在乎</span></span>。唐朝以前，妇女不但有再嫁的自由，而且可以参加各种各样的公共活动。
+    </div>
+
+    <!-- Para 2 -->
+    <div class="fill-para">
+      <strong>2.</strong> 中国妇女有<span class="blank-wrap"><input class="blank-input" data-ans="缠足" placeholder="___"><span class="blank-hint">→ 缠足</span></span>的习惯，女孩子如果有一双大脚，就会被人<span class="blank-wrap"><input class="blank-input" data-ans="耻笑" placeholder="___"><span class="blank-hint">→ 耻笑</span></span>，<span class="blank-wrap"><input class="blank-input" data-ans="甚至" placeholder="___"><span class="blank-hint">→ 甚至</span></span>找不到<span class="blank-wrap"><input class="blank-input" data-ans="婆家" placeholder="___"><span class="blank-hint">→ 婆家</span></span>。这种现象到"五四"运动以后才慢慢<span class="blank-wrap"><input class="blank-input" data-ans="消失" placeholder="___"><span class="blank-hint">→ 消失</span></span>。"五四"运动给中国社会带来了很多新的<span class="blank-wrap"><input class="blank-input" data-ans="风气" placeholder="___"><span class="blank-hint">→ 风气</span></span>，但家庭中的<span class="blank-wrap"><input class="blank-input" data-ans="夫权" placeholder="___"><span class="blank-hint">→ 夫权</span></span>观念、女性必须"<span class="blank-wrap"><input class="blank-input" data-ans="三从四德" placeholder="______" style="width:96px"><span class="blank-hint">→ 三从四德</span></span>"的文化延续了下来。许多女性的家庭<span class="blank-wrap"><input class="blank-input" data-ans="权益" placeholder="___"><span class="blank-hint">→ 权益</span></span>受到<span class="blank-wrap"><input class="blank-input" data-ans="侵犯" placeholder="___"><span class="blank-hint">→ 侵犯</span></span>。
+    </div>
+
+    <!-- Para 3 -->
+    <div class="fill-para">
+      <strong>3.</strong> 1949年以后，中国妇女的地位得到了很大的<span class="blank-wrap"><input class="blank-input" data-ans="提高" placeholder="___"><span class="blank-hint">→ 提高</span></span>。她们开始在政治、经济、文化、教育等各个方面<span class="blank-wrap"><input class="blank-input" data-ans="享有" placeholder="___"><span class="blank-hint">→ 享有</span></span>与男性<span class="blank-wrap"><input class="blank-input" data-ans="平等" placeholder="___"><span class="blank-hint">→ 平等</span></span>的<span class="blank-wrap"><input class="blank-input" data-ans="权利" placeholder="___"><span class="blank-hint">→ 权利</span></span>。她们不但有了<span class="blank-wrap"><input class="blank-input" data-ans="婚姻" placeholder="___"><span class="blank-hint">→ 婚姻</span></span>自由，也跟男性一样有了<span class="blank-wrap"><input class="blank-input" data-ans="选举" placeholder="___"><span class="blank-hint">→ 选举</span></span>权和被选举权。
+    </div>
+
+    <!-- Para 4 -->
+    <div class="fill-para">
+      <strong>4.</strong> 上个世纪八十年代以来，中国人的生活发生了<span class="blank-wrap"><input class="blank-input" data-ans="翻天覆地" placeholder="______" style="width:96px"><span class="blank-hint">→ 翻天覆地</span></span>的变化。但<span class="blank-wrap"><input class="blank-input" data-ans="目前" placeholder="___"><span class="blank-hint">→ 目前</span></span>，男性的平均收入仍然远高于女性，中国的男女收入<span class="blank-wrap"><input class="blank-input" data-ans="比率" placeholder="___"><span class="blank-hint">→ 比率</span></span>存在很大<span class="blank-wrap"><input class="blank-input" data-ans="差距" placeholder="___"><span class="blank-hint">→ 差距</span></span>。要实现女性跟男性的真正平等，还需要女性提高自身的<span class="blank-wrap"><input class="blank-input" data-ans="素质" placeholder="___"><span class="blank-hint">→ 素质</span></span>，努力创造无性别<span class="blank-wrap"><input class="blank-input" data-ans="歧视" placeholder="___"><span class="blank-hint">→ 歧视</span></span>的社会环境，让中国女性<span class="blank-wrap"><input class="blank-input" data-ans="拥有" placeholder="___"><span class="blank-hint">→ 拥有</span></span>一个更<span class="blank-wrap"><input class="blank-input" data-ans="广阔" placeholder="___"><span class="blank-hint">→ 广阔</span></span>的天空。
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-check" onclick="checkFill()">检查答案 Check</button>
+      <button class="btn-reset" onclick="resetFill()">重置 Reset</button>
+    </div>
+    <div class="score-box" id="fill-score"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (二) 选词填空
+══════════════════════════════════ -->
+<div class="ex-section" id="sec1">
+  <div class="ex-header">
+    <h2>(二) 选词填空</h2>
+    <p>Fill in the blanks with the most appropriate words from the list below.</p>
+  </div>
+  <div class="ex-body">
+    <div class="word-bank" id="wb2">
+      <span>压迫</span><span>消失</span><span>广阔</span><span>虐待</span>
+      <span>享有</span><span>侵犯</span><span>在乎</span><span>调查</span>
+      <span>下降</span><span>期待</span>
+    </div>
+
+    <div id="cloze-items">
+      <div class="sentence-group" data-ans="虐待">
+        <span class="s-num">1.</span>
+        <span class="s-text">听说在战争中经常有打骂、<input class="s-input" placeholder="____">俘虏的现象。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="压迫">
+        <span class="s-num">2.</span>
+        <span class="s-text">在阶级社会里，被<input class="s-input" placeholder="____">阶级不可能有真正的自由。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="消失">
+        <span class="s-num">3.</span>
+        <span class="s-text">恐龙在地球上生活了一亿多年，后来为什么突然<input class="s-input" placeholder="____">了？</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="侵犯">
+        <span class="s-num">4.</span>
+        <span class="s-text">根据美国法律，如果美国公司在国外<input class="s-input" placeholder="____">人权，外国公民可以把这个公司告上法庭。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="广阔">
+        <span class="s-num">5.</span>
+        <span class="s-text">看着那<input class="s-input" placeholder="____">的海面，他的心情一下子好了许多。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="期待">
+        <span class="s-num">6.</span>
+        <span class="s-text">对蝴蝶季节迁徙（to migrate）的研究才刚刚开始，科学家<input class="s-input" placeholder="____">着有更多更有趣的发现。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="下降">
+        <span class="s-num">7.</span>
+        <span class="s-text">他最近迷上了电脑游戏，没有心思学习，考试成绩直线<input class="s-input" placeholder="____">。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="享有">
+        <span class="s-num">8.</span>
+        <span class="s-text">杭州<input class="s-input" placeholder="____">"人间天堂"的美誉（good reputation），是中国著名的旅游城市。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="调查">
+        <span class="s-num">9.</span>
+        <span class="s-text">根据最新的<input class="s-input" placeholder="____">结果，69%的老师不喜欢新上任的教育部部长。</span>
+        <div class="s-feedback"></div>
+      </div>
+      <div class="sentence-group" data-ans="在乎">
+        <span class="s-num">10.</span>
+        <span class="s-text">不少人进歌厅、舞厅一次花几百元、上千元都不<input class="s-input" placeholder="____">，却不愿意花几十元买书报杂志。</span>
+        <div class="s-feedback"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-check" onclick="checkCloze()">检查答案 Check</button>
+      <button class="btn-reset" onclick="resetCloze()">重置 Reset</button>
+    </div>
+    <div class="score-box" id="cloze-score"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (三) 选词
+══════════════════════════════════ -->
+<div class="ex-section" id="sec2">
+  <div class="ex-header">
+    <h2>(三) 选择适当的词语完成句子</h2>
+    <p>Choose the correct word from each pair to complete the sentences.</p>
+  </div>
+  <div class="ex-body">
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">1</span> 权益 &nbsp;|&nbsp; 权利</div>
+      <div class="pair-sentence">在美国，每一位消费者都有<select class="pair-select" data-ans="权利"><option value="">—</option><option>权益</option><option>权利</option></select>运用《消费者保护法》来保护自己的合法<select class="pair-select" data-ans="权益"><option value="">—</option><option>权益</option><option>权利</option></select>。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>权利</strong> = the right <em>to do</em> something (a privilege or entitlement). <strong>权益</strong> = rights and interests combined (a broader legal concept of what one is owed).</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">2</span> 享有 &nbsp;|&nbsp; 拥有</div>
+      <div class="pair-sentence">在理想的社会中，不管你是否<select class="pair-select" data-ans="拥有"><option value="">—</option><option>享有</option><option>拥有</option></select>个人财产，所有人都<select class="pair-select" data-ans="享有"><option value="">—</option><option>享有</option><option>拥有</option></select>同样的自由和平等。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>享有</strong> = to enjoy (rights, status, reputation) — formal register, used with abstract things like rights or prestige. <strong>拥有</strong> = to have / possess — used with both concrete and abstract things.</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">3</span> 甚至 &nbsp;|&nbsp; 即使</div>
+      <div class="pair-sentence">电脑技术落后（to lag）是很糟糕的情况。不用说比人差十年八年，<select class="pair-select" data-ans="甚至"><option value="">—</option><option>甚至</option><option>即使</option></select>只差三五年，<select class="pair-select" data-ans="即使"><option value="">—</option><option>甚至</option><option>即使</option></select>一两年，都是很大的差距。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>甚至</strong> = even (emphasizes an extreme case that is surprising). <strong>即使</strong> = even if / even though (introduces a concession or hypothetical condition).</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">4</span> 虐待 &nbsp;|&nbsp; 歧视</div>
+      <div class="pair-sentence">他小时候经常受后母的<select class="pair-select" data-ans="虐待"><option value="">—</option><option>虐待</option><option>歧视</option></select>，上学后因为残疾又受到同学们的<select class="pair-select" data-ans="歧视"><option value="">—</option><option>虐待</option><option>歧视</option></select>，最终他变成了一个性格孤僻（antisocial）的人。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>虐待</strong> = to physically or emotionally abuse — involves active mistreatment. <strong>歧视</strong> = to discriminate against — involves unfair bias or prejudice based on a characteristic.</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">5</span> 现象 &nbsp;|&nbsp; 风气</div>
+      <div class="pair-sentence">我承认老百姓大多数是好的，我们的社会<select class="pair-select" data-ans="风气"><option value="">—</option><option>现象</option><option>风气</option></select>基本上也是好的，但社会上有个奇怪的<select class="pair-select" data-ans="现象"><option value="">—</option><option>现象</option><option>风气</option></select>：好人怕坏人。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>风气</strong> = general social atmosphere or prevalent custom — describes the overall climate. <strong>现象</strong> = a specific observable phenomenon or occurrence.</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">6</span> 婚姻 &nbsp;|&nbsp; 出嫁</div>
+      <div class="pair-sentence">我面临着一个<select class="pair-select" data-ans="婚姻"><option value="">—</option><option>婚姻</option><option>出嫁</option></select>的难题；我现在已经到了<select class="pair-select" data-ans="出嫁"><option value="">—</option><option>婚姻</option><option>出嫁</option></select>的年龄，追求者也不少，但这么多年了，还没有找到真正的爱情。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>婚姻</strong> = marriage as an institution or state (N). <strong>出嫁</strong> = (of a woman) to get married / to be wed (VO) — specifically describes the act of a woman marrying and leaving her family.</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">7</span> 侵犯 &nbsp;|&nbsp; 压迫</div>
+      <div class="pair-sentence">他认为，目前国际上最严重的<select class="pair-select" data-ans="侵犯"><option value="">—</option><option>侵犯</option><option>压迫</option></select>人权的行为是种族歧视与种族<select class="pair-select" data-ans="压迫"><option value="">—</option><option>侵犯</option><option>压迫</option></select>，而这正是美国社会很难根治的一个问题。</div>
+      <div class="pair-feedback"></div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">8</span> 差距 &nbsp;|&nbsp; 下降</div>
+      <div class="pair-sentence">由于这些年经济发展的不平衡，地区之间的收入<select class="pair-select" data-ans="差距"><option value="">—</option><option>差距</option><option>下降</option></select>变大，一部分人的生活水平不但没有提高，反而<select class="pair-select" data-ans="下降"><option value="">—</option><option>差距</option><option>下降</option></select>了。</div>
+      <div class="pair-feedback"></div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">9</span> 心态 &nbsp;|&nbsp; 素质</div>
+      <div class="pair-sentence">王洪是一名基本功非常好、而且<select class="pair-select" data-ans="素质"><option value="">—</option><option>心态</option><option>素质</option></select>不错的棋手（chess player）。虽然我只跟他谈了几分钟，但我能感觉到他此时的<select class="pair-select" data-ans="心态"><option value="">—</option><option>心态</option><option>素质</option></select>很稳定。</div>
+      <div class="pair-feedback"></div>
+      <div class="instructions" style="margin-top:10px;margin-bottom:0;font-size:12px">💡 <strong>素质</strong> = inner quality, ability, or caliber — a more stable, long-term attribute. <strong>心态</strong> = state of mind or mentality — describes one's current psychological disposition.</div>
+    </div>
+
+    <div class="pair-group">
+      <div class="pair-label"><span class="pair-badge">10</span> 改变 &nbsp;|&nbsp; 消失</div>
+      <div class="pair-sentence">她站在那里，看着他的身影<select class="pair-select" data-ans="消失"><option value="">—</option><option>改变</option><option>消失</option></select>在黑夜中。说实话，她多么希望他突然<select class="pair-select" data-ans="改变"><option value="">—</option><option>改变</option><option>消失</option></select>主意，跑回来，牵着她的手，像以前一样送她回家。</div>
+      <div class="pair-feedback"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-check" onclick="checkPairs()">检查答案 Check</button>
+      <button class="btn-reset" onclick="resetPairs()">重置 Reset</button>
+    </div>
+    <div class="score-box" id="pair-score"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (四) 造句
+══════════════════════════════════ -->
+<div class="ex-section" id="sec3">
+  <div class="ex-header">
+    <h2>(四) 造句 Make Sentences</h2>
+    <p>Write your own sentence using each word. Click "See example" to check your ideas.</p>
+  </div>
+  <div class="ex-body">
+    <div class="instructions">用下列词语各造一个句子（中文）。写完后点击"参考例句"查看示例。</div>
+
+    <div class="open-q">
+      <span class="q-num">1.</span> <strong>歧视</strong>
+      <textarea placeholder="用"歧视"造句…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考例句</span>
+      <div class="model-answer"><strong>参考：</strong>在一些国家，对女性的就业歧视至今仍然非常严重，许多女性因为怀孕或已婚而被拒绝雇用。</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">2.</span> <strong>要求</strong>
+      <textarea placeholder="用"要求"造句…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考例句</span>
+      <div class="model-answer"><strong>参考：</strong>这家公司要求所有员工每天按时上班，不得迟到，否则将被扣工资。</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">3.</span> <strong>甚至</strong>
+      <textarea placeholder="用"甚至"造句…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考例句</span>
+      <div class="model-answer"><strong>参考：</strong>他工作非常努力，每天工作十二个小时，甚至周末也不休息。<br><br>💡 "甚至" introduces a surprising extreme case. Pattern: ...，甚至...（也/都）...</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">4.</span> <strong>挑战</strong>
+      <textarea placeholder="用"挑战"造句…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考例句</span>
+      <div class="model-answer"><strong>参考：</strong>在职场中，女性面临的最大挑战之一是如何在事业和家庭之间取得平衡。<br><br>💡 "挑战" can be N (a challenge) or V (to challenge). 面临挑战 = to face a challenge; 接受挑战 = to accept a challenge.</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">5.</span> <strong>总之</strong>
+      <textarea placeholder="用"总之"造句…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考例句</span>
+      <div class="model-answer"><strong>参考：</strong>总之，要实现真正的男女平等，不仅需要法律的保护，还需要改变社会观念和每个人的行为。<br><br>💡 "总之" = in short / in conclusion. It summarizes what was just said. Usually comes at the start of the final sentence.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (五) 翻译
+══════════════════════════════════ -->
+<div class="ex-section" id="sec4">
+  <div class="ex-header">
+    <h2>(五) 把下面一段话翻译成中文</h2>
+    <p>Translate the following paragraph into Chinese.</p>
+  </div>
+  <div class="ex-body">
+    <div class="translate-src">
+      Eight years ago, Farrell, curious if the practice of foot binding still existed, asked a friend in China, who in turn asked her sister, who was overheard by her car driver. The driver revealed that he had a grandmother with bound feet. It was this elderly woman, Zhan Yunying, who would become Farrell's first subject. "It was kind of shocking but in some ways beautiful," she remembers, "When she took her shoes and socks off, her feet were totally, fully in lotus shape. To me, they represented the trouble and toil this woman has been through — and what women do go through — to attract a partner... There was something quite tremendous about it."
+    </div>
+    <div class="open-q" style="border:none;padding:0;background:transparent">
+      <textarea style="min-height:160px" placeholder="在这里写你的中文翻译…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考译文</span>
+      <div class="model-answer">
+        <strong>参考译文（供参考，不唯一）：</strong><br>
+        八年前，法雷尔好奇是否还存在缠足的习俗，便向她在中国的一位朋友打听。这位朋友问了她的姐妹，恰好被她的司机听到了。司机透露说他有一位缠了足的祖母。正是这位老人——詹云英——成了法雷尔的第一个拍摄对象。"看到时有些震惊，但某种程度上又觉得很美，"她回忆道，"当她脱掉鞋袜，那双脚完全呈莲花形状。在我看来，那代表了这位女性所经历的艰辛与磨难——以及所有女性为了吸引伴侣所付出的代价……那有一种震撼人心的力量。"
+        <br><br>
+        <strong>关键词汇提示：</strong>缠足 chánzú | 莲花 liánhuā | 艰辛与磨难 jiānxīn yǔ mónàn | 震撼人心 zhèn hàn rén xīn
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (六) 判断正误 T/F
+══════════════════════════════════ -->
+<div class="ex-section" id="sec5">
+  <div class="ex-header">
+    <h2>(六) 根据课文判断正误</h2>
+    <p>Mark the following statements True (T) or False (F) based on the main text.</p>
+  </div>
+  <div class="ex-body">
+
+    <div class="tf-item" data-ans="F">
+      <div class="tf-num">1.</div>
+      <div>
+        <div class="tf-statement">宋朝以前，中国妇女受压迫、受歧视的情况非常严重。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">2.</div>
+      <div>
+        <div class="tf-statement">蔡文姬是汉朝时期的人，她结过两次婚。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">3.</div>
+      <div>
+        <div class="tf-statement">唐朝以前，女孩子有一双大脚不会被人看不起，也不会被人耻笑。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="F">
+      <div class="tf-num">4.</div>
+      <div>
+        <div class="tf-statement">缠足的女孩必须穿高跟鞋，这样，她们走路的样子就完全改变了。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="F">
+      <div class="tf-num">5.</div>
+      <div>
+        <div class="tf-statement">"五四"运动后，缠足现象很快就消失了，但女性的地位没有很大的变化。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">6.</div>
+      <div>
+        <div class="tf-statement">媳妇在"熬成婆"以后，会用婆婆对待自己的方法来对待媳妇。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">7.</div>
+      <div>
+        <div class="tf-statement">在古代，女性除了可能受到婆婆或者后母的虐待，还得受男性的压迫。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">8.</div>
+      <div>
+        <div class="tf-statement">中国的女性是1949年以后才开始享有选举权和被选举权的。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">9.</div>
+      <div>
+        <div class="tf-statement">二十世纪七十年代末，中国基本上实现了男女平等。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="tf-item" data-ans="T">
+      <div class="tf-num">10.</div>
+      <div>
+        <div class="tf-statement">作为世界上人口最多的国家，中国妇女的地位问题面临着很多新的挑战。</div>
+        <div class="tf-expl"></div>
+      </div>
+      <div class="tf-btns"><button class="tf-btn" onclick="checkTF(this,'T')">T</button><button class="tf-btn" onclick="checkTF(this,'F')">F</button></div>
+    </div>
+
+    <div class="score-box" id="tf-score"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (七) 问答
+══════════════════════════════════ -->
+<div class="ex-section" id="sec6">
+  <div class="ex-header">
+    <h2>(七) 根据课文内容回答下列问题</h2>
+    <p>Answer the following questions based on the content of the text.</p>
+  </div>
+  <div class="ex-body">
+    <div class="instructions">用中文回答，尽量用课文中的词语。写完后点击"参考答案"查看要点。</div>
+
+    <div class="open-q">
+      <span class="q-num">1.</span> 根据课文内容，哪个时代中国女性的地位最高？
+      <textarea placeholder="你的回答…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考答案</span>
+      <div class="model-answer"><strong>参考：</strong>宋朝以前（特别是唐朝及更早），中国女性的地位相对最高。那时妇女可以再嫁，可以参加公共活动，社会对她们比较开放，没有缠足习俗，也不要求她们从一而终。</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">2.</span> 缠足的习惯是什么时候开始的？它为什么会流行那么多年？为什么那么长的时间里没有人改变这种传统？
+      <textarea placeholder="你的回答…"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考答案</span>
+      <div class="model-answer"><strong>参考：</strong>缠足从宋朝开始流行。它会流行那么多年，是因为社会把小脚视为女性美的标准，不缠足的女孩找不到婆家，甚至会被人耻笑。缠足后，女性被禁锢在家中，无法了解外面的世界，也无法组织起来反抗，所以这种传统一直延续到20世纪初"五四"运动之后才慢慢消失。</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">3.</span> 你认为什么样的情况算是真正实现了男女平等？男女到底能不能真正平等？
+      <textarea style="min-height:120px" placeholder="你的看法…（开放性问题）"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考要点</span>
+      <div class="model-answer"><strong>参考要点（此题无标准答案，以下为思考方向）：</strong><br>• 法律层面：同等权利（投票权、财产权、受教育权）<br>• 经济层面：收入差距消失，职场机会平等<br>• 家庭层面：家务和育儿责任的平均分担<br>• 观念层面：社会不再用不同标准衡量男女的行为与价值<br>• 关键词：真正平等、性别歧视、观念改变、法律保护、社会压力</div>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">4.</span> 在过去的一百年中，你们国家妇女的地位有没有变化？如果有，哪些方面变化最大？
+      <textarea style="min-height:120px" placeholder="你的回答…（结合自己国家的情况）"></textarea>
+      <span class="model-toggle" onclick="toggleModel(this)">📖 参考框架</span>
+      <div class="model-answer"><strong>回答框架建议：</strong><br>1. 说明你的国家（美国/韩国/墨西哥…）<br>2. 描述100年前女性的地位（投票权？工作机会？教育？）<br>3. 描述今天的变化（哪些进步最显著？）<br>4. 指出仍然存在的问题（收入差距？家庭压力？）<br>5. 总结你的看法<br><br><strong>有用词汇：</strong>投票权 / 就业机会 / 职场歧视 / 薪酬差距 / 生育权 / 社会观念</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+  (八) 写作
+══════════════════════════════════ -->
+<div class="ex-section" id="sec7">
+  <div class="ex-header">
+    <h2>(八) 写作练习 Writing Exercises</h2>
+    <p>Choose one prompt and write a short essay (150–250 characters). Use the Writing Studio for AI feedback.</p>
+  </div>
+  <div class="ex-body">
+    <div class="open-q">
+      <span class="q-num">1.</span> <strong>《关于国民素质》</strong>
+      <p style="margin-top:8px;font-size:14px;color:#555;line-height:1.65">一个人的素质可以从哪些方面看出来？你认为普通人的素质对一个国家来说重要吗？为什么？</p>
+      <textarea style="min-height:140px" placeholder="在这里写作（建议150-250字）…"></textarea>
+    </div>
+
+    <div class="open-q">
+      <span class="q-num">2.</span> <strong>《我对实现"男女平等"的看法》</strong>
+      <p style="margin-top:8px;font-size:14px;color:#555;line-height:1.65">什么是男女平等？有人说："成功的女人不一定是走出厨房、走入职场的女人。"也有人说："男女生来就是不平等的，所以试图实现男女平等基本上是不可能的。"你对这个问题有什么看法？</p>
+      <textarea style="min-height:140px" placeholder="在这里写作（建议150-250字）…"></textarea>
+    </div>
+
+    <div class="writing-promo">
+      <p>写完后，可以使用 <strong>Writing Studio</strong> 获取 AI 即时反馈，包括内容、词汇、语法和表达评价。</p>
+      <a href="writing-studio.html">→ 前往写作工坊</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /ex-wrap -->
+
+<div class="nav-footer">
+  <a class="nav-link sec" href="smart_reading_4_0.html">← 课文阅读</a>
+  <a class="nav-link pri" href="lesson-4-0-word.html">词汇学习 →</a>
+</div>
+
+<script>
+// ── Tab switching ──────────────────────────────
+const tabs = document.querySelectorAll('.ex-tab');
+const sections = document.querySelectorAll('.ex-section');
+function showSection(i) {
+  tabs.forEach((t,j) => t.classList.toggle('active', i===j));
+  sections.forEach((s,j) => s.classList.toggle('active', i===j));
+}
+
+// ── Progress tracking ──────────────────────────
+const answered = {};
+function recordAnswer(id) {
+  answered[id] = true;
+  updateProgress();
+}
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  // Estimate total interactive items
+  const total = document.querySelectorAll('.blank-input, .s-input, .pair-select, .tf-item').length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('prog-label').textContent = `${done} / ${total} 完成`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ── (一) Fill-in-blank ─────────────────────────
+function checkFill() {
+  const inputs = document.querySelectorAll('#sec0 .blank-input');
+  let ok = 0;
+  inputs.forEach((inp, i) => {
+    const ans = inp.dataset.ans;
+    const val = inp.value.trim();
+    if (val === ans) {
+      inp.classList.add('ok'); inp.classList.remove('err');
+      ok++;
+    } else {
+      inp.classList.add('err'); inp.classList.remove('ok');
+    }
+    recordAnswer('fill-' + i);
+  });
+  const box = document.getElementById('fill-score');
+  box.className = 'score-box show';
+  box.innerHTML = `<div class="score-big">${ok} / ${inputs.length}</div><div class="score-label">${ok===inputs.length ? '🎉 全部正确！' : '🔍 红色输入框显示需要修改的答案'}</div>`;
+}
+function resetFill() {
+  document.querySelectorAll('#sec0 .blank-input').forEach(inp => {
+    inp.value = ''; inp.className = 'blank-input';
+  });
+  document.getElementById('fill-score').className = 'score-box';
+}
+
+// ── (二) Cloze ────────────────────────────────
+function checkCloze() {
+  const groups = document.querySelectorAll('#cloze-items .sentence-group');
+  let ok = 0;
+  groups.forEach((g, i) => {
+    const ans = g.dataset.ans;
+    const inp = g.querySelector('.s-input');
+    const fb = g.querySelector('.s-feedback');
+    const val = inp.value.trim();
+    if (val === ans) {
+      inp.classList.add('ok'); inp.classList.remove('err');
+      fb.className = 's-feedback show ok'; fb.textContent = '✓ 正确！';
+      ok++;
+    } else {
+      inp.classList.add('err'); inp.classList.remove('ok');
+      fb.className = 's-feedback show err';
+      fb.textContent = val ? `✗ 答案是：${ans}` : `✗ 正确答案：${ans}`;
+    }
+    recordAnswer('cloze-' + i);
+  });
+  const box = document.getElementById('cloze-score');
+  box.className = 'score-box show';
+  box.innerHTML = `<div class="score-big">${ok} / ${groups.length}</div><div class="score-label">${ok===groups.length ? '🎉 全部正确！' : '继续努力！'}</div>`;
+}
+function resetCloze() {
+  document.querySelectorAll('#cloze-items .s-input').forEach(inp => { inp.value=''; inp.className='s-input'; });
+  document.querySelectorAll('#cloze-items .s-feedback').forEach(fb => fb.className='s-feedback');
+  document.getElementById('cloze-score').className='score-box';
+}
+
+// ── (三) Pairs ────────────────────────────────
+function checkPairs() {
+  const groups = document.querySelectorAll('.pair-group');
+  let ok = 0; let total = 0;
+  groups.forEach((g, gi) => {
+    const selects = g.querySelectorAll('.pair-select');
+    const fb = g.querySelector('.pair-feedback');
+    let groupOk = true;
+    selects.forEach((sel, si) => {
+      total++;
+      const val = sel.value;
+      if (val === sel.dataset.ans) {
+        sel.classList.add('ok'); sel.classList.remove('err');
+      } else {
+        sel.classList.add('err'); sel.classList.remove('ok');
+        groupOk = false;
+      }
+      recordAnswer(`pair-${gi}-${si}`);
+    });
+    if (groupOk) {
+      fb.className = 'pair-feedback show ok'; fb.textContent = '✓ 正确！';
+      ok++;
+    } else {
+      fb.className = 'pair-feedback show err';
+      const correct = [...selects].map(s => s.dataset.ans).join(' / ');
+      fb.textContent = `✗ 正确答案：${correct}`;
+    }
+  });
+  const box = document.getElementById('pair-score');
+  box.className = 'score-box show';
+  box.innerHTML = `<div class="score-big">${ok} / ${groups.length}</div><div class="score-label">题组得分（每组全对才算对）</div>`;
+}
+function resetPairs() {
+  document.querySelectorAll('.pair-select').forEach(s => { s.value=''; s.className='pair-select'; });
+  document.querySelectorAll('.pair-feedback').forEach(f => f.className='pair-feedback');
+  document.getElementById('pair-score').className='score-box';
+}
+
+// ── (六) T/F ──────────────────────────────────
+const TF_EXPLS = {
+  1: {T:'❌ 不对。宋朝以前，妇女地位相对开放，可以再嫁，可以参与公共活动，缠足习俗也尚未流行。', F:'✅ 正确！压迫妇女的现象主要从宋朝开始加重，宋朝以前妇女相对开放。'},
+  2: {T:'✅ 正确！蔡文姬是东汉（汉朝）时期的人，她先嫁匈奴，后回到汉朝再嫁，共结过两次婚。', F:'❌ 不对。课文说蔡文姬"在匈奴结婚……回到汉朝……又一次出嫁"，说明她结过两次婚。'},
+  3: {T:'✅ 正确！缠足从宋朝才开始流行，唐朝及之前大脚不是问题，女孩子不会因此受到嘲笑。', F:'❌ 不对。课文说缠足"从宋朝才开始流行"，唐朝以前女孩子有大脚不会被耻笑。'},
+  4: {T:'❌ 不对。课文说缠足"像穿上了高跟鞋一样"改变了走路方式，这是比喻，缠足女孩并不是真的穿高跟鞋。', F:'✅ 正确！课文用高跟鞋来打比方——缠足改变了走路姿势，但缠足本身不是穿高跟鞋。'},
+  5: {T:'❌ 不对。"五四"运动后缠足才"慢慢"消失（不是"很快"），而且"五四"运动确实带来了新风气，说女性地位"没有变化"也不准确。', F:'✅ 正确！课文说缠足是"慢慢消失"，而且"五四"运动带来了新风气，女性地位也有所改变，只是夫权观念仍延续。'},
+  6: {T:'✅ 正确！课文说"婆婆们经常用一种不健康的心态，重复自己的婆婆当年用过的办法"，这正是"多年的媳妇熬成婆"的含义。', F:'❌ 不对。课文明确描述了这种循环：受过压迫的媳妇熬成婆后，往往重复对自己的那种对待方式。'},
+  7: {T:'✅ 正确！课文说即使没有受到婆婆或后母虐待，女性"也得受到父亲和公公的压迫"，说明古代女性面临多重压迫。', F:'❌ 不对。课文最后提到"即使在家中没有受到婆婆或后母的虐待，女性也得受到父亲和公公的压迫"。'},
+  8: {T:'✅ 正确！课文说1949年以后，女性"跟男性一样有了选举权和被选举权"，1949年以前她们没有这些权利。', F:'❌ 不对。课文说"1949年以后……跟男性一样有了选举权和被选举权"，这是1949年以后才有的。'},
+  9: {T:'✅ 正确！课文说"到七十年代末……中国有30%的政府官员是女性……至此，中国基本上实现了男女平等。"', F:'❌ 不对。课文明确写道"至此，中国基本上实现了男女平等"，对应的时间是七十年代末。'},
+  10: {T:'✅ 正确！课文最后说"中国妇女的地位问题还面临很多新的挑战"，并讨论了收入差距和观念问题。', F:'❌ 不对。课文在最后几段清楚地指出了仍然存在的挑战：收入差距、"干得好不如嫁得好"的观念等。'},
+};
+
+const tfAnswered = {};
+function checkTF(btn, choice) {
+  const item = btn.closest('.tf-item');
+  const num = [...document.querySelectorAll('.tf-item')].indexOf(item) + 1;
+  if (tfAnswered[num]) return;
+  tfAnswered[num] = true;
+  const ans = item.dataset.ans;
+  const btns = item.querySelectorAll('.tf-btn');
+  btns.forEach(b => b.disabled = true);
+  const expl = item.querySelector('.tf-expl');
+  if (choice === ans) {
+    btn.classList.add('correct');
+    expl.className = 'tf-expl show ok';
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(b => { if (b.textContent === ans) b.classList.add('correct'); });
+    expl.className = 'tf-expl show err';
+  }
+  expl.textContent = TF_EXPLS[num][choice] || '';
+  recordAnswer('tf-' + num);
+  // Show score when all answered
+  if (Object.keys(tfAnswered).length === 10) {
+    const ok = Object.keys(tfAnswered).filter(n => {
+      const item2 = document.querySelectorAll('.tf-item')[n-1];
+      return item2.dataset.ans === (tfAnswered[n] === item2.dataset.ans ? item2.dataset.ans : '');
+    }).length;
+    // Count correct
+    let correct = 0;
+    document.querySelectorAll('.tf-item').forEach(it => {
+      if (it.querySelector('.tf-btn.correct')) correct++;
+    });
+    const box = document.getElementById('tf-score');
+    box.className = 'score-box show';
+    box.innerHTML = `<div class="score-big">${correct} / 10</div><div class="score-label">${correct===10?'🎉 全部正确！':'继续努力！'}</div>`;
+  }
+}
+
+// ── Model answers toggle ───────────────────────
+function toggleModel(el) {
+  const answer = el.nextElementSibling;
+  const isShown = answer.classList.contains('show');
+  answer.classList.toggle('show');
+  el.textContent = isShown ? '📖 参考答案' : '🔒 隐藏答案';
+  el.style.color = isShown ? '' : '#922b21';
+}
+</script>
+</body>
+</html>
